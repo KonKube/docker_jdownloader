@@ -1,4 +1,4 @@
-FROM openjdk:11.0.5-jre-slim-buster
+FROM arm64v8/openjdk:8u212-slim-stretch
 MAINTAINER KonKube
 
 # set User and Group arguments
@@ -7,10 +7,8 @@ ARG JDOWNLOADER_USER=jdownloader
 ARG JDOWNLOADER_UID=1000
 ARG JDOWNLOADER_GID=100
 
-# update apt-get and install tini
-RUN apt-get update && apt-get install -y \
-  tini \
-  curl
+# update apt-get and install curl
+RUN apt-get update && apt-get install -y curl
 
 # create User with predefined arguments
 RUN \
@@ -45,10 +43,6 @@ USER ${JDOWNLOADER_USER}
 
 WORKDIR /opt/JDownloader/
 
-RUN java -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar
-
 COPY ./entrypoint.sh /opt/JDownloader/entrypoint.sh
 
-ENTRYPOINT ["tini", "-g", "--", "/opt/JDownloader/entrypoint.sh"]
-
-CMD ["java", "-Djava.awt.headless=true", "-jar", "/opt/JDownloader/JDownloader.jar"]
+ENTRYPOINT ["/opt/JDownloader/entrypoint.sh"]

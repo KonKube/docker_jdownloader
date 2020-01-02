@@ -8,6 +8,8 @@ then
   echo "}" >> /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
 fi
 
-"$@"
+java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
 
-while sleep 3600; do :; done
+sleep 30
+
+java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
