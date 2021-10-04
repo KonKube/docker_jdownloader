@@ -1,5 +1,7 @@
-FROM arm64v8/openjdk:8u212-slim-stretch
-MAINTAINER KonKube
+ARG JDK_VERSION=8u302-slim-buster
+FROM openjdk:${JDK_VERSION}}
+
+LABEL maintainer="konkube@gmail.com"
 
 # set User and Group arguments
 ARG JDOWNLOADER_HOME=/opt/JDownloader
@@ -24,7 +26,7 @@ RUN \
 
 # create JDownloader directories
 RUN mkdir -p /opt/JDownloader/libs && \
-  chown -R $JDOWNLOADER_UID:$JDOWNLOADER_GID /opt/JDownloader
+  chown -R ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} /opt/JDownloader
 
 # download JDownloader.jar and set right permissions for JDownloader.jar
 RUN curl \
@@ -33,7 +35,7 @@ RUN curl \
     --retry 3 \
     --output /opt/JDownloader/JDownloader.jar \
     "http://installer.jdownloader.org/JDownloader.jar" && \
-    chown $JDOWNLOADER_UID:$JDOWNLOADER_GID /opt/JDownloader/JDownloader.jar && \
+    chown ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} /opt/JDownloader/JDownloader.jar && \
     chmod 755 /opt/JDownloader/JDownloader.jar
 
 # apt-get clenaup after install
