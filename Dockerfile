@@ -1,5 +1,5 @@
 ARG JDK_VERSION=8u302-slim-buster
-FROM openjdk:${JDK_VERSION}}
+FROM openjdk:${JDK_VERSION}
 
 LABEL maintainer="konkube@gmail.com"
 
