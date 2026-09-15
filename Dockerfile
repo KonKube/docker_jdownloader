@@ -6,7 +6,7 @@ ARG TARGETARCH
 LABEL maintainer="konkube@gmail.com"
 
 # set User and Group and download arguments
-ARG JDOWNLOADER_HOME=/opt/jdownloader
+ARG JDOWNLOADER_HOME=/opt/JDownloader
 ARG JDOWNLOADER_USER=jdownloader
 ARG JDOWNLOADER_UID=1004
 ARG JDOWNLOADER_GID=100
