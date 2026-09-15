@@ -1,20 +1,12 @@
 #!/bin/sh
 
-if [ ! -f /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json ]
-then
-  if [[ ! -z $PASSWORD ]] && [[ ! -z $EMAIL ]] 
-  then 
-    echo "{" > /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-    echo "  \"password\" : \"$PASSWORD\"," >> /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-    echo "  \"email\" : \"$EMAIL\"" >> /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-    echo "}" >> /opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-  else 
-    echo "Environment variable for Password or Email is missing"
-  fi
-fi
+echo "{" > /opt/jdownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
+echo "  \"password\" : \"$PASSWORD\"," >> /opt/jdownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
+echo "  \"email\" : \"$EMAIL\"" >> /opt/jdownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
+echo "}" >> /opt/jdownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
 
-java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
+java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar /opt/jdownloader/JDownloader.jar -norestart
 
-sleep 30
+sleep 10
 
-java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
+java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar /opt/jdownloader/JDownloader.jar -norestart

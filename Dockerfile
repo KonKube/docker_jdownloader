@@ -1,50 +1,44 @@
-ARG JDK_VERSION=8u302-slim-buster
-FROM openjdk:${JDK_VERSION}
+ARG IMAGE_VERSION=21-jre-jammy
+FROM eclipse-temurin:${IMAGE_VERSION}
+
+ARG TARGETARCH
 
 LABEL maintainer="konkube@gmail.com"
 
-# set User and Group arguments
-ARG JDOWNLOADER_HOME=/opt/JDownloader
+# set User and Group and download arguments
+ARG JDOWNLOADER_HOME=/opt/jdownloader
 ARG JDOWNLOADER_USER=jdownloader
-ARG JDOWNLOADER_UID=1000
+ARG JDOWNLOADER_UID=1004
 ARG JDOWNLOADER_GID=100
-
-# update apt-get and install curl
-RUN apt-get update && apt-get install -y curl
+ARG JDOWNLOADER_URL="http://installer.jdownloader.org/JDownloader.jar"
 
 # create User with predefined arguments
-RUN \
-  adduser \
-    --disabled-password \
-    --disabled-login \
-    --gecos '' \
-    --home ${JDOWNLOADER_HOME} \
+RUN useradd \
     --uid "${JDOWNLOADER_UID}" \
     --gid "${JDOWNLOADER_GID}" \
-    --quiet \
+    --home-dir "${JDOWNLOADER_HOME}" \
+    --create-home \
+    --shell /usr/sbin/nologin \
     "${JDOWNLOADER_USER}"
 
 # create JDownloader directories
-RUN mkdir -p /opt/JDownloader/libs && \
-  chown -R ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} /opt/JDownloader
+RUN mkdir -p ${JDOWNLOADER_HOME}/libs && mkdir -p ${JDOWNLOADER_HOME}/cfg && \
+  chown -R ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} ${JDOWNLOADER_HOME}
 
 # download JDownloader.jar and set right permissions for JDownloader.jar
 RUN curl \
     --silent \
     --location \
     --retry 3 \
-    --output /opt/JDownloader/JDownloader.jar \
-    "http://installer.jdownloader.org/JDownloader.jar" && \
-    chown ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} /opt/JDownloader/JDownloader.jar && \
-    chmod 755 /opt/JDownloader/JDownloader.jar
-
-# apt-get clenaup after install
-RUN apt-get purge -y curl && apt-get autoremove -y && apt-get autoclean
+    --output ${JDOWNLOADER_HOME}/JDownloader.jar \
+    ${JDOWNLOADER_URL} && \
+    chown ${JDOWNLOADER_UID}:${JDOWNLOADER_GID} ${JDOWNLOADER_HOME}/JDownloader.jar && \
+    chmod 755 ${JDOWNLOADER_HOME}/JDownloader.jar
 
 USER ${JDOWNLOADER_USER}
 
-WORKDIR /opt/JDownloader/
+WORKDIR ${JDOWNLOADER_HOME}
 
-COPY ./entrypoint.sh /opt/JDownloader/entrypoint.sh
+COPY ./entrypoint.sh ${JDOWNLOADER_HOME}/entrypoint.sh
 
-ENTRYPOINT ["/opt/JDownloader/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
