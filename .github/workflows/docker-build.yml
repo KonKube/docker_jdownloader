@@ -27,4 +27,4 @@ jobs:
       -
         name: Build
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t konkube/jdownloader:latest -t konkube/jdownloader:8u302-slim-buster -t konkube/jdownloader:$(date +%Y%m) --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t konkube/jdownloader:latest -t konkube/jdownloader:$(date +%Y%m) --push .
