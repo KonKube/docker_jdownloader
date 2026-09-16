@@ -1,14 +1,22 @@
 #!/bin/sh
 
-JDOWNLOADER_HOME=/opt/JDownloader
+# download JDownloader.jar and set right permissions
+curl --output $JDOWNLOADER_APP/JDownloader.jar $JDOWNLOADER_URL
+chmod 755 $JDOWNLOADER_APP/JDownloader.jar
 
-echo "{" > $JDOWNLOADER_HOME/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-echo "  \"password\" : \"$PASSWORD\"," >> $JDOWNLOADER_HOME/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-echo "  \"email\" : \"$EMAIL\"" >> $JDOWNLOADER_HOME/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
-echo "}" >> $JDOWNLOADER_HOME/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
+# prepare and set JDownloader settings
+if [ ! -f "$JDOWNLOADER_APP/cfg/$JDOWNLOADER_SETTINGS" ]; then
+    cp $JDOWNLOADER_APP/$JDOWNLOADER_SETTINGS $JDOWNLOADER_APP/cfg/$JDOWNLOADER_SETTINGS
+    sed -Ei "s/DUMMYDEVICE/$DEVICE/g" $JDOWNLOADER_APP/cfg/$JDOWNLOADER_SETTINGS
+    sed -Ei "s/DUMMYMAIL/$EMAIL/g" $JDOWNLOADER_APP/cfg/$JDOWNLOADER_SETTINGS
+    sed -Ei "s/DUMMYPASS/$PASSWORD/g" $JDOWNLOADER_APP/cfg/$JDOWNLOADER_SETTINGS
+fi
 
-java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar $JDOWNLOADER_HOME/JDownloader.jar -norestart
+# run for update
+java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar $JDOWNLOADER_APP/JDownloader.jar -norestart
 
-sleep 10
+# sleep
+sleep 5
 
-java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar $JDOWNLOADER_HOME/JDownloader.jar -norestart
+# run for service
+java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true ${VMARGS} -jar $JDOWNLOADER_APP/JDownloader.jar -norestart
