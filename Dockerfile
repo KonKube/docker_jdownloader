@@ -6,7 +6,7 @@ LABEL maintainer="konkube@gmail.com"
 # set build arguments
 ARG JDOWNLOADER_HOME=/opt/JDownloader
 ARG JDOWNLOADER_USER=jdownloader
-ARG JDOWNLOADER_UID=1004
+ARG JDOWNLOADER_UID=1000
 ARG JDOWNLOADER_GID=100
 ARG JDOWNLOADER_SETTINGS=org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json
 
